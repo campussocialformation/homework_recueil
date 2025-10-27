@@ -347,7 +347,7 @@
             background: white;
             border: 2px solid #e67e22;
             border-radius: 8px;
-            cursor: move;
+            cursor: pointer;
             user-select: none;
             transition: all 0.3s;
             font-weight: 500;
@@ -358,9 +358,16 @@
             transform: scale(1.05);
         }
 
-        .draggable-item.dragging {
+        .draggable-item.selected {
+            background: #e67e22;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.4);
+        }
+
+        .draggable-item.placed {
             opacity: 0.5;
-            transform: rotate(5deg);
+            pointer-events: none;
         }
 
         .drop-zone {
@@ -375,12 +382,19 @@
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
+            cursor: pointer;
         }
 
-        .drop-zone.drag-over {
+        .drop-zone:hover {
+            background: #f9f9f9;
+            border-color: #e67e22;
+        }
+
+        .drop-zone.active {
             background: #fff5f0;
             border-color: #e67e22;
             border-style: solid;
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2);
         }
 
         .drop-zone.correct {
@@ -461,6 +475,18 @@
             flex-wrap: wrap;
             gap: 10px;
             padding: 10px;
+            cursor: pointer;
+        }
+
+        .pyramid-level:hover {
+            background: #f9f9f9;
+            transform: scale(1.02);
+        }
+
+        .pyramid-level.active {
+            background: #fff5f0;
+            border-width: 3px;
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2);
         }
 
         .pyramid-level-1 { width: 90%; }
@@ -468,11 +494,6 @@
         .pyramid-level-3 { width: 60%; }
         .pyramid-level-4 { width: 45%; }
         .pyramid-level-5 { width: 30%; }
-
-        .pyramid-level.drag-over {
-            background: #fff5f0;
-            border-width: 3px;
-        }
 
         .pyramid-level.correct {
             background: #d4edda;
@@ -831,7 +852,7 @@
                 <p>Glissez-déposez les 14 besoins dans le bon ordre (de 1 à 14).</p>
                 
                 <div class="drag-instructions">
-                    💡 <strong>Instructions :</strong> Faites glisser chaque besoin vers la case correspondant à son numéro dans la liste de Virginia Henderson.
+                    💡 <strong>Instructions :</strong> Cliquez sur un besoin pour le sélectionner (il devient orange), puis cliquez sur la case numérotée où vous voulez le placer.
                 </div>
 
                 <div class="drag-drop-container">
@@ -885,7 +906,7 @@
                 <p>Placez les différents besoins au bon niveau de la pyramide (de la base au sommet).</p>
                 
                 <div class="drag-instructions">
-                    💡 <strong>Instructions :</strong> Glissez chaque type de besoin vers le niveau correspondant de la pyramide.
+                    💡 <strong>Instructions :</strong> Cliquez sur un besoin pour le sélectionner (il devient orange), puis cliquez sur le niveau de la pyramide où vous voulez le placer.
                 </div>
 
                 <div class="maslow-container">
@@ -1225,66 +1246,116 @@
             }
         }
 
-        // Drag and Drop - Henderson
-        let draggedElement = null;
+        // Click/Select system for Henderson and Maslow
+        let selectedItem = null;
+        let selectedItemType = null; // 'henderson' ou 'maslow'
 
-        // Initialiser le drag and drop pour Henderson
+        // Initialiser le système de clic pour Henderson
         function initHendersonDragDrop() {
             const items = document.querySelectorAll('#hendersonItems .draggable-item');
             const zones = document.querySelectorAll('#hendersonDropZones .drop-zone');
 
             items.forEach(item => {
-                item.addEventListener('dragstart', handleDragStart);
-                item.addEventListener('dragend', handleDragEnd);
+                item.addEventListener('click', function() {
+                    selectItem(this, 'henderson');
+                });
             });
 
             zones.forEach(zone => {
-                zone.addEventListener('dragover', handleDragOver);
-                zone.addEventListener('drop', handleDrop);
-                zone.addEventListener('dragleave', handleDragLeave);
+                zone.addEventListener('click', function() {
+                    placeItemInZone(this, 'henderson');
+                });
             });
         }
 
-        function handleDragStart(e) {
-            draggedElement = this;
-            this.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
+        // Initialiser le système de clic pour Maslow
+        function initMaslowDragDrop() {
+            const items = document.querySelectorAll('#maslowItems .draggable-item');
+            const levels = document.querySelectorAll('.pyramid-level');
+
+            items.forEach(item => {
+                item.addEventListener('click', function() {
+                    selectItem(this, 'maslow');
+                });
+            });
+
+            levels.forEach(level => {
+                level.addEventListener('click', function() {
+                    placeItemInZone(this, 'maslow');
+                });
+            });
         }
 
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-            this.classList.add('drag-over');
-            e.dataTransfer.dropEffect = 'move';
-            return false;
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            }
-            this.classList.remove('drag-over');
-
-            if (draggedElement) {
-                // Retirer l'élément de son conteneur actuel
-                const parent = draggedElement.parentNode;
-                
-                // Ajouter à la zone de dépôt
-                this.appendChild(draggedElement);
-                
-                draggedElement = null;
+        // Sélectionner un élément
+        function selectItem(item, type) {
+            // Si l'élément est déjà placé, ne rien faire
+            if (item.classList.contains('placed')) {
+                return;
             }
 
-            return false;
+            // Désélectionner tous les éléments du même type
+            const container = type === 'henderson' ? '#hendersonItems' : '#maslowItems';
+            document.querySelectorAll(`${container} .draggable-item`).forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            // Désactiver les zones du type précédent
+            if (selectedItemType && selectedItemType !== type) {
+                if (selectedItemType === 'henderson') {
+                    document.querySelectorAll('#hendersonDropZones .drop-zone').forEach(z => z.classList.remove('active'));
+                } else {
+                    document.querySelectorAll('.pyramid-level').forEach(z => z.classList.remove('active'));
+                }
+            }
+
+            // Sélectionner l'élément actuel
+            item.classList.add('selected');
+            selectedItem = item;
+            selectedItemType = type;
+
+            // Activer visuellement les zones de dépôt correspondantes
+            if (type === 'henderson') {
+                document.querySelectorAll('#hendersonDropZones .drop-zone').forEach(zone => {
+                    if (!zone.querySelector('.draggable-item')) {
+                        zone.classList.add('active');
+                    }
+                });
+            } else {
+                document.querySelectorAll('.pyramid-level').forEach(level => {
+                    if (!level.querySelector('.draggable-item')) {
+                        level.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // Placer l'élément sélectionné dans une zone
+        function placeItemInZone(zone, type) {
+            if (!selectedItem || selectedItemType !== type) {
+                return;
+            }
+
+            // Vérifier si la zone est vide
+            const existingItem = zone.querySelector('.draggable-item');
+            if (existingItem) {
+                return;
+            }
+
+            // Placer l'élément dans la zone
+            selectedItem.classList.remove('selected');
+            selectedItem.classList.add('placed');
+            zone.appendChild(selectedItem);
+
+            // Désactiver toutes les zones
+            if (type === 'henderson') {
+                document.querySelectorAll('#hendersonDropZones .drop-zone').forEach(z => z.classList.remove('active'));
+            } else {
+                document.querySelectorAll('.pyramid-level').forEach(z => z.classList.remove('active'));
+            }
+
+            // Réinitialiser la sélection
+            selectedItem = null;
+            selectedItemType = null;
         }
 
         // Vérifier l'ordre de Henderson
@@ -1325,32 +1396,16 @@
                 // Réinitialiser après 2 secondes
                 setTimeout(() => {
                     zones.forEach(zone => {
-                        zone.classList.remove('correct', 'incorrect');
+                        zone.classList.remove('correct', 'incorrect', 'active');
                         const item = zone.querySelector('.draggable-item');
                         if (item) {
+                            item.classList.remove('placed');
                             document.getElementById('hendersonItems').appendChild(item);
                         }
                     });
                     feedback.classList.remove('show');
                 }, 2000);
             }
-        }
-
-        // Drag and Drop - Maslow
-        function initMaslowDragDrop() {
-            const items = document.querySelectorAll('#maslowItems .draggable-item');
-            const levels = document.querySelectorAll('.pyramid-level');
-
-            items.forEach(item => {
-                item.addEventListener('dragstart', handleDragStart);
-                item.addEventListener('dragend', handleDragEnd);
-            });
-
-            levels.forEach(level => {
-                level.addEventListener('dragover', handleDragOver);
-                level.addEventListener('drop', handleDrop);
-                level.addEventListener('dragleave', handleDragLeave);
-            });
         }
 
         // Vérifier le placement Maslow
@@ -1391,9 +1446,10 @@
                 // Réinitialiser après 2 secondes
                 setTimeout(() => {
                     levels.forEach(level => {
-                        level.classList.remove('correct', 'incorrect');
+                        level.classList.remove('correct', 'incorrect', 'active');
                         const item = level.querySelector('.draggable-item');
                         if (item) {
+                            item.classList.remove('placed');
                             document.getElementById('maslowItems').appendChild(item);
                         }
                     });
