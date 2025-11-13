@@ -35,19 +35,10 @@
                     <li>Découvrir les applications contemporaines issues des modèles plus anciens (AGGIR, GEVA, ...)</li>
                 </ul>
 
-                <div class="video-container">
-                    <div class="video-placeholder">
-                        🎥 Vidéo d'introduction (Remplacer par votre vidéo YouTube/Vimeo)
-                        <br><br>
-                        <small>Pour intégrer une vraie vidéo, utilisez une iframe YouTube ou Vimeo</small>
-                    </div>
-                    <button class="btn" onclick="markVideoWatched(1)">✓ J'ai visionné la vidéo</button>
-                    <div class="video-watched" id="video1-watched">✓ Vidéo visionnée</div>
-                </div>
 
                 <div class="navigation">
                     <button class="btn" disabled>← Précédent</button>
-                    <button class="btn" id="next1" onclick="goToSection(2)" disabled>Suivant →</button>
+                    <button class="btn" id="next1" onclick="goToSection(2)" >Suivant →</button>
                 </div>
             </div>
 
@@ -85,16 +76,18 @@
                 </ul>
 
                 <div class="video-container">
-                    <div class="video-placeholder">
-                        🎥 Vidéo explicative sur la bientraitance
-                    </div>
-                    <button class="btn" onclick="markVideoWatched(2)">✓ J'ai visionné la vidéo</button>
-                    <div class="video-watched" id="video2-watched">✓ Vidéo visionnée</div>
+                    <h3>
+                        Pour aller plus loin à ce sujet, une recommandations de bonne pratique existe à ce sujet:
+                    </h3>
+                    <a href="https://www.has-sante.fr/upload/docs/application/pdf/2018-03/reco_projet.pdf" target="_blank">
+                        <button class="btn" onclick="markVideoWatched(2)">Voir la recommandation</button>
+                    </a>
+                    <div class="video-watched" id="video2-watched">✓ On continue !</div>
                 </div>
 
                 <div class="navigation">
                     <button class="btn" onclick="goToSection(1)">← Précédent</button>
-                    <button class="btn" id="next2" onclick="goToSection(3)" disabled>Suivant →</button>
+                    <button class="btn" id="next2" onclick="goToSection(3)" >Suivant →</button>
                 </div>
             </div>
 
