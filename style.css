@@ -609,3 +609,36 @@
                 display: none;
             }
         }
+
+        /* Container vidéo responsive */
+.video-container {
+    position: relative;
+    margin: 30px 0;
+}
+
+.video-placeholder {
+    position: relative;
+    padding-bottom: 56.25%; /* Ratio 16:9 (9/16 = 0.5625) */
+    height: 0;
+    overflow: hidden;
+    background: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.video-placeholder iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 8px;
+}
+
+/* Si vous avez du texte dans video-placeholder avant l'iframe */
+.video-placeholder > *:not(iframe) {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    text-align: center;
+}
