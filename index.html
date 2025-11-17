@@ -35,10 +35,13 @@
                     <li>Découvrir les applications contemporaines issues des modèles plus anciens (AGGIR, GEVA, ...)</li>
                 </ul>
 
-
+                <div class="video-container">
+                    <button class="btn" onclick="markVideoWatched(1)">✓ J'ai lu l'introduction</button>
+                    <div class="video-watched" id="video1-watched">✓ Compris !</div>
+                </div>
                 <div class="navigation">
                     <button class="btn" disabled>← Précédent</button>
-                    <button class="btn" id="next1" onclick="goToSection(2)" >Suivant →</button>
+                    <button class="btn" id="next1" onclick="goToSection(2)" disabled>Suivant →</button>
                 </div>
             </div>
 
@@ -66,7 +69,7 @@
                 </p>
 
                 <h3 style="color: #d35400; margin-top: 30px; margin-bottom: 15px;">4. Les objectifs</h3>
-                <p>Les objectifs de la personne accompagnée sonty fixés dans la mesure du possible par cette dernière. Ils correspondent à co-construction attentes/besoins et se déclinent souvent dans un projet d'accompagnement.
+                <p>Les objectifs de la personne accompagnée sont fixés dans la mesure du possible par cette dernière. Ils correspondent à co-construction attentes/besoins et se déclinent souvent dans un projet d'accompagnement.
                 C'est une mise en action de l'accompagnement. 
                 <ul> Par exemple,
                 <li> Une personne explique se sentir seule et souhaite avoir accès à des espaces de socialisation = Attentes</li>
@@ -380,36 +383,35 @@
 
             <!-- Section 8: Section personnalisable 1 -->
             <div class="section" id="section8">
-                <h2>✨ Section personnalisable 1</h2>
-                <p>Ajoutez ici votre contenu personnalisé. Cette section est entièrement modifiable selon vos besoins.</p>
+                <h2>✨ L'évolution des besoins</h2>
+                <p>Effectivement, une évaluation continue est necessaire car les besoins identifiés évoluent.</p>
 
                 <div class="custom-content-area" style="background: #f9f9f9; padding: 30px; border-radius: 10px; margin: 20px 0; border-left: 5px solid #e67e22;">
-                    <h3 style="color: #d35400; margin-bottom: 15px;">💡 Contenu à personnaliser</h3>
-                    <p>Vous pouvez ajouter ici :</p>
-                    <ul style="margin-left: 20px; line-height: 1.8;">
-                        <li>Du texte explicatif</li>
-                        <li>Des listes à puces ou numérotées</li>
-                        <li>Des images ou schémas</li>
-                        <li>Des études de cas</li>
-                        <li>Des exercices pratiques</li>
-                    </ul>
+                    <h3 style="color: #d35400; margin-bottom: 15px;">💡 A ce titre, la haute autorité de santé propose une recommandation de bonne pratique</h3>
+                    <p>à retrouver ici :</p>
+                    <a href="https://www.has-sante.fr/jcms/c_2835142/fr/l-outil-de-reperage-des-risques-de-perte-d-autonomie-ou-de-son-aggravation" target="_blank">
+                        <button class="btn">Voir la recommandation</button>
+                    </a>
                 </div>
 
-                <!-- Vidéo optionnelle -->
+                <!-- Vidéo sur l'évolution des besoins -->
                 <div class="video-container">
                     <div class="video-placeholder">
-                        🎥 Vidéo personnalisée - Section 8
+                        🎥 Des besoins qui peuvent évoluer
                         <br><br>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/aHbULtv43jE?si=w1hlp3e6GQdqJ2M1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>                    </div>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/aHbULtv43jE?si=w1hlp3e6GQdqJ2M1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
                     <button class="btn" onclick="markVideoWatched(4)">✓ J'ai visionné la vidéo</button>
                     <div class="video-watched" id="video4-watched">✓ Vidéo visionnée</div>
                 </div>
-
+                
                 <div class="navigation">
                     <button class="btn" onclick="goToSection(7)">← Précédent</button>
                     <button class="btn" id="next8" onclick="goToSection(9)" disabled>Suivant →</button>
                 </div>
             </div>
+
+
 
             <!-- Section 9: Section personnalisable 2 -->
             <div class="section" id="section9">
@@ -638,6 +640,11 @@
     </div>
 
     <script>
+        // ====== MODE DEBUG ======
+        // Mets cette variable à true pour activer/désactiver facilement les sections
+        const DEBUG_MODE = false; // Change en false pour le mode production
+        // ========================
+
         // État de la progression
         const state = {
             currentSection: 1,
@@ -650,6 +657,13 @@
             totalSections: 12 // Mis à jour de 9 à 12
         };
 
+        // Indicateur visuel en mode DEBUG
+        if (DEBUG_MODE) {
+            document.body.insertAdjacentHTML('afterbegin', 
+                '<div style="position:fixed;top:10px;right:10px;background:#e74c3c;color:white;padding:10px 15px;border-radius:5px;z-index:9999;font-weight:bold;box-shadow:0 2px 10px rgba(0,0,0,0.2);">🔧 MODE DEBUG ACTIVÉ</div>'
+            );
+        }
+
         // Fonction pour marquer une vidéo comme visionnée
         function markVideoWatched(videoNumber) {
             state.videosWatched[videoNumber - 1] = true;
@@ -660,6 +674,13 @@
 
         // Fonction pour vérifier la complétion d'une section
         function checkSectionCompletion(section) {
+            // MODE DEBUG : tout est déverrouillé
+            if (DEBUG_MODE) {
+                document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = false);
+                return;
+            }
+
+            // MODE NORMAL : vérifications habituelles
             let canProceed = false;
 
             switch(section) {
@@ -1014,6 +1035,9 @@
             // Scroller vers le haut
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
+            // Vérifier si le bouton "Suivant" doit être activé
+            checkSectionCompletion(sectionNumber);
+            
             updateProgress();
         }
 
@@ -1116,6 +1140,7 @@ Code vérifiable auprès du formateur
 
         // Initialisation
         updateProgress();
+        checkSectionCompletion(1); // Initialiser dès le départ
     </script>
 </body>
 </html>
