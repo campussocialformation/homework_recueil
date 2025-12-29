@@ -1204,15 +1204,22 @@
             zone.appendChild(selectedItem);
 
             // Afficher l'explication pour Henderson et Maslow
+            console.log('Type:', type);
             const explanation = selectedItem.getAttribute('data-explanation');
+            console.log('Explanation:', explanation);
             if (explanation) {
                 const containerId = type === 'henderson' ? 'hendersonExplanations' : 'maslowExplanations';
+                console.log('Container ID:', containerId);
                 const explanationsContainer = document.getElementById(containerId);
+                console.log('Container:', explanationsContainer);
                 const explanationDiv = document.createElement('div');
                 explanationDiv.className = 'explanation-box';
                 explanationDiv.style.cssText = 'background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #27ae60; animation: fadeIn 0.5s;';
                 explanationDiv.innerHTML = `<strong>${selectedItem.textContent}</strong><br>${explanation}`;
                 explanationsContainer.appendChild(explanationDiv);
+                console.log('Explanation added!');
+            } else {
+                console.log('No explanation found');
             }
 
             // Désactiver toutes les zones
