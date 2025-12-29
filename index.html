@@ -318,11 +318,11 @@
 
                 <div class="maslow-container">
                     <div class="draggable-items" id="maslowItems">
-                        <div class="draggable-item" draggable="true" data-level="1">Besoins physiologiques</div>
-                        <div class="draggable-item" draggable="true" data-level="2">Besoins de sécurité</div>
-                        <div class="draggable-item" draggable="true" data-level="3">Besoins d'appartenance et d'amour</div>
-                        <div class="draggable-item" draggable="true" data-level="4">Besoins d'estime</div>
-                        <div class="draggable-item" draggable="true" data-level="5">Besoins d'accomplissement de soi</div>
+                        <div class="draggable-item" draggable="true" data-level="1" data-explanation="Besoins vitaux nécessaires à la survie : nourriture, eau, sommeil, respiration, chaleur.">BESOINS PHYSIOLOGIQUES</div>
+                        <div class="draggable-item" draggable="true" data-level="2" data-explanation="Sécurité physique, sécurité financière, protection contre les dangers et les menaces, stabilité et ordre.">Sécurité</div>
+                        <div class="draggable-item" draggable="true" data-level="3" data-explanation="Relations sociales, affection, amour, amitié, sentiment d'appartenance à un groupe ou à une communauté.">Appartenance et amour</div>
+                        <div class="draggable-item" draggable="true" data-level="4" data-explanation="Estime de soi, reconnaissance, respect des autres, accomplissement personnel, confiance.">Estime</div>
+                        <div class="draggable-item" draggable="true" data-level="5" data-explanation="Réalisation personnelle, développement du potentiel, créativité, poursuite d'objectifs personnels, croissance personnelle.">Accomplissement de soi (ou auto-actualisation)</div>
                     </div>
 
                     <div class="pyramid">
@@ -342,6 +342,8 @@
                             <span class="pyramid-label">Niveau 1:</span>
                         </div>
                     </div>
+
+                    <div id="maslowExplanations" style="margin-top: 20px;"></div>
 
                     <button class="btn check-order-btn" onclick="checkMaslowOrder()">Vérifier le placement</button>
                     <div class="drag-feedback" id="maslowFeedback"></div>
@@ -1201,17 +1203,16 @@
             selectedItem.classList.add('placed');
             zone.appendChild(selectedItem);
 
-            // Afficher l'explication pour Henderson
-            if (type === 'henderson') {
-                const explanation = selectedItem.getAttribute('data-explanation');
-                if (explanation) {
-                    const explanationsContainer = document.getElementById('hendersonExplanations');
-                    const explanationDiv = document.createElement('div');
-                    explanationDiv.className = 'explanation-box';
-                    explanationDiv.style.cssText = 'background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #27ae60; animation: fadeIn 0.5s;';
-                    explanationDiv.innerHTML = `<strong>${selectedItem.textContent}</strong><br>${explanation}`;
-                    explanationsContainer.appendChild(explanationDiv);
-                }
+            // Afficher l'explication pour Henderson et Maslow
+            const explanation = selectedItem.getAttribute('data-explanation');
+            if (explanation) {
+                const containerId = type === 'henderson' ? 'hendersonExplanations' : 'maslowExplanations';
+                const explanationsContainer = document.getElementById(containerId);
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation-box';
+                explanationDiv.style.cssText = 'background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #27ae60; animation: fadeIn 0.5s;';
+                explanationDiv.innerHTML = `<strong>${selectedItem.textContent}</strong><br>${explanation}`;
+                explanationsContainer.appendChild(explanationDiv);
             }
 
             // Désactiver toutes les zones
@@ -1323,6 +1324,8 @@
                             document.getElementById('maslowItems').appendChild(item);
                         }
                     });
+                    // Vider les explications
+                    document.getElementById('maslowExplanations').innerHTML = '';
                     feedback.classList.remove('show');
                 }, 2000);
             }
