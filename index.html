@@ -262,20 +262,20 @@
 
                 <div class="drag-drop-container">
                     <div class="draggable-items" id="hendersonItems">
-                        <div class="draggable-item" draggable="true" data-correct="1">Respirer</div>
-                        <div class="draggable-item" draggable="true" data-correct="2">Boire et manger</div>
-                        <div class="draggable-item" draggable="true" data-correct="3">Éliminer</div>
-                        <div class="draggable-item" draggable="true" data-correct="4">Se mouvoir et maintenir une bonne posture</div>
-                        <div class="draggable-item" draggable="true" data-correct="5">Dormir, se reposer</div>
-                        <div class="draggable-item" draggable="true" data-correct="6">Se vêtir et se dévêtir</div>
-                        <div class="draggable-item" draggable="true" data-correct="7">Maintenir la température du corps</div>
-                        <div class="draggable-item" draggable="true" data-correct="8">Être propre, soigné et protéger ses téguments</div>
-                        <div class="draggable-item" draggable="true" data-correct="9">Éviter les dangers</div>
-                        <div class="draggable-item" draggable="true" data-correct="10">Communiquer avec ses semblables</div>
-                        <div class="draggable-item" draggable="true" data-correct="11">Agir selon ses croyances et ses valeurs</div>
-                        <div class="draggable-item" draggable="true" data-correct="12">S'occuper en vue de se réaliser</div>
-                        <div class="draggable-item" draggable="true" data-correct="13">Se récréer</div>
-                        <div class="draggable-item" draggable="true" data-correct="14">Apprendre</div>
+                        <div class="draggable-item" draggable="true" data-correct="1" data-explanation="Le besoin de respirer : nécessité pour chaque individu, de disposer d'une oxygénation cellulaire satisfaisante.">Respirer</div>
+                        <div class="draggable-item" draggable="true" data-correct="2" data-explanation="Le besoin de boire et de manger : nécessité pour chaque individu, d'entretenir son métabolisme afin de produire de l'énergie, de construire, maintenir et réparer les tissus.">Boire et manger</div>
+                        <div class="draggable-item" draggable="true" data-correct="3" data-explanation="Le besoin d'éliminer : nécessité pour chaque individu, d'éliminer les déchets qui résultent du fonctionnement de l'organisme.">Éliminer</div>
+                        <div class="draggable-item" draggable="true" data-correct="4" data-explanation="Le besoin de se mouvoir et de maintenir une bonne posture : nécessité pour chaque individu, de permettre la réalisation des activités sociales.">Se mouvoir et maintenir une bonne posture</div>
+                        <div class="draggable-item" draggable="true" data-correct="5" data-explanation="Le besoin de dormir et se reposer : nécessité pour chaque individu, de prévenir et réparer la fatigue, diminuer les tensions, conserver et promouvoir l'énergie.">Dormir et se reposer</div>
+                        <div class="draggable-item" draggable="true" data-correct="6" data-explanation="Le besoin de se vêtir et de se dévêtir : nécessité pour chaque individu, de se protéger et d'exprimer son identité physique, mentale et sociale.">Se vêtir et se dévêtir</div>
+                        <div class="draggable-item" draggable="true" data-correct="7" data-explanation="Le besoin de maintenir la température corporelle dans les limites de la normale : nécessité pour chaque individu, d'assurer le rendement optimal des fonctions métaboliques, de maintenir les systèmes biophysiologiques et de maintenir une sensation de chaleur corporelle satisfaisante.">Maintenir sa température corporelle dans les limites de la normale</div>
+                        <div class="draggable-item" draggable="true" data-correct="8" data-explanation="Le besoin d'être propre, soigné et protéger ses téguments : nécessité pour chaque individu, de maintenir l'intégrité de la peau, des muqueuses, d'éliminer les germes et les souillures, et d'avoir une sensation de propreté corporelle, élément de bien-être.">Être propre, soigné et protéger ses téguments</div>
+                        <div class="draggable-item" draggable="true" data-correct="9" data-explanation="Le besoin d'éviter les dangers : nécessité pour chaque individu, de se protéger contre tout danger.">Éviter les dangers</div>
+                        <div class="draggable-item" draggable="true" data-correct="10" data-explanation="Le besoin de communiquer avec ses semblables : nécessité pour chaque individu, de transmettre et de percevoir des messages cognitifs ou affectifs, conscients ou inconscients et d'établir des relations avec autrui.">Communiquer avec ses semblables</div>
+                        <div class="draggable-item" draggable="true" data-correct="11" data-explanation="Le besoin d'agir selon ses valeurs et ses croyances : nécessité pour chaque individu, d'être reconnu comme sujet humain.">Agir selon ses croyances et ses valeurs</div>
+                        <div class="draggable-item" draggable="true" data-correct="12" data-explanation="Le besoin de s'occuper en vue de se réaliser : nécessité pour chaque individu, d'exercer ses rôles, d'assumer ses responsabilités.">S'occuper en vue de se réaliser</div>
+                        <div class="draggable-item" draggable="true" data-correct="13" data-explanation="Le besoin de se récréer, se divertir : nécessité pour chaque individu, de se détendre.">Se récréer, se divertir</div>
+                        <div class="draggable-item" draggable="true" data-correct="14" data-explanation="Le besoin d'apprendre : nécessité pour chaque individu, d'évoluer, de s'adapter, d'interagir en vue du maintien et de la promotion de sa santé.">Apprendre</div>
                     </div>
 
                     <div id="hendersonDropZones">
@@ -294,6 +294,8 @@
                         <div class="drop-zone" data-position="13"><span class="drop-zone-label">13.</span></div>
                         <div class="drop-zone" data-position="14"><span class="drop-zone-label">14.</span></div>
                     </div>
+
+                    <div id="hendersonExplanations" style="margin-top: 20px;"></div>
 
                     <button class="btn check-order-btn" onclick="checkHendersonOrder()">Vérifier l'ordre</button>
                     <div class="drag-feedback" id="hendersonFeedback"></div>
@@ -316,11 +318,11 @@
 
                 <div class="maslow-container">
                     <div class="draggable-items" id="maslowItems">
-                        <div class="draggable-item" draggable="true" data-level="1">Besoins physiologiques</div>
-                        <div class="draggable-item" draggable="true" data-level="2">Besoins de sécurité</div>
-                        <div class="draggable-item" draggable="true" data-level="3">Besoins d'appartenance et d'amour</div>
-                        <div class="draggable-item" draggable="true" data-level="4">Besoins d'estime</div>
-                        <div class="draggable-item" draggable="true" data-level="5">Besoins d'accomplissement de soi</div>
+                        <div class="draggable-item" draggable="true" data-level="1" data-explanation="Besoins vitaux nécessaires à la survie : nourriture, eau, sommeil, respiration, chaleur.">BESOINS PHYSIOLOGIQUES</div>
+                        <div class="draggable-item" draggable="true" data-level="2" data-explanation="Sécurité physique, sécurité financière, protection contre les dangers et les menaces, stabilité et ordre.">Sécurité</div>
+                        <div class="draggable-item" draggable="true" data-level="3" data-explanation="Relations sociales, affection, amour, amitié, sentiment d'appartenance à un groupe ou à une communauté.">Appartenance et amour</div>
+                        <div class="draggable-item" draggable="true" data-level="4" data-explanation="Estime de soi, reconnaissance, respect des autres, accomplissement personnel, confiance.">Estime</div>
+                        <div class="draggable-item" draggable="true" data-level="5" data-explanation="Réalisation personnelle, développement du potentiel, créativité, poursuite d'objectifs personnels, croissance personnelle.">Accomplissement de soi (ou auto-actualisation)</div>
                     </div>
 
                     <div class="pyramid">
@@ -340,6 +342,8 @@
                             <span class="pyramid-label">Niveau 1:</span>
                         </div>
                     </div>
+
+                    <div id="maslowExplanations" style="margin-top: 20px;"></div>
 
                     <button class="btn check-order-btn" onclick="checkMaslowOrder()">Vérifier le placement</button>
                     <div class="drag-feedback" id="maslowFeedback"></div>
@@ -1199,6 +1203,18 @@
             selectedItem.classList.add('placed');
             zone.appendChild(selectedItem);
 
+            // Afficher l'explication pour Henderson et Maslow
+            const explanation = selectedItem.getAttribute('data-explanation');
+            if (explanation) {
+                const containerId = type === 'henderson' ? 'hendersonExplanations' : 'maslowExplanations';
+                const explanationsContainer = document.getElementById(containerId);
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation-box';
+                explanationDiv.style.cssText = 'background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #27ae60; animation: fadeIn 0.5s;';
+                explanationDiv.innerHTML = `<strong>${selectedItem.textContent}</strong><br>${explanation}`;
+                explanationsContainer.appendChild(explanationDiv);
+            }
+
             // Désactiver toutes les zones
             if (type === 'henderson') {
                 document.querySelectorAll('#hendersonDropZones .drop-zone').forEach(z => z.classList.remove('active'));
@@ -1256,6 +1272,8 @@
                             document.getElementById('hendersonItems').appendChild(item);
                         }
                     });
+                    // Vider les explications
+                    document.getElementById('hendersonExplanations').innerHTML = '';
                     feedback.classList.remove('show');
                 }, 2000);
             }
@@ -1306,6 +1324,8 @@
                             document.getElementById('maslowItems').appendChild(item);
                         }
                     });
+                    // Vider les explications
+                    document.getElementById('maslowExplanations').innerHTML = '';
                     feedback.classList.remove('show');
                 }, 2000);
             }
