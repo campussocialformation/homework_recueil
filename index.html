@@ -36,7 +36,7 @@
                 </ul>
 
                 <div class="video-container">
-                    <button class="btn" onclick="markVideoWatched(1)">✓ J'ai lu l'introduction</button>
+                    <button class="btn" onclick="markVideoWatched(1, 1)">✓ J'ai lu l'introduction</button>
                     <div class="video-watched" id="video1-watched">✓ Compris !</div>
                 </div>
                 <div class="navigation">
@@ -83,7 +83,7 @@
                         Pour aller plus loin à ce sujet, une recommandations de bonne pratique existe à ce sujet:
                     </h3>
                     <a href="https://www.has-sante.fr/upload/docs/application/pdf/2018-03/reco_projet.pdf" target="_blank">
-                        <button class="btn" onclick="markVideoWatched(2)">Voir la recommandation</button>
+                        <button class="btn" onclick="markVideoWatched(2, 2)">Voir la recommandation</button>
                     </a>
                     <div class="video-watched" id="video2-watched">✓ On continue !</div>
                 </div>
@@ -480,7 +480,7 @@
                     <div class="video-placeholder">
                         <iframe src="https://www.youtube.com/embed/NJGBFSQemhI?si=oyk2DRdyH-2_btNg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <button class="btn" onclick="markVideoWatched(3)">✓ J'ai visionné la vidéo</button>
+                    <button class="btn" onclick="markVideoWatched(3, 8)">✓ J'ai visionné la vidéo</button>
                     <div class="video-watched" id="video3-watched">✓ Vidéo visionnée</div>
                 </div>
 
@@ -508,7 +508,7 @@
                     <div class="video-placeholder">
                         <iframe src="https://www.youtube.com/embed/aHbULtv43jE?si=w1hlp3e6GQdqJ2M1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <button class="btn" onclick="markVideoWatched(4)">✓ J'ai visionné la vidéo</button>
+                    <button class="btn" onclick="markVideoWatched(4, 9)">✓ J'ai visionné la vidéo</button>
                     <div class="video-watched" id="video4-watched">✓ Vidéo visionnée</div>
                 </div>
                 
@@ -600,7 +600,7 @@
                     <div class="video-placeholder">
                         <iframe src="https://www.youtube.com/embed/1uehBQjbbFU?si=leydu1ubzeKf4LOe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <button class="btn" onclick="markVideoWatched(5)">✓ J'ai visionné la vidéo</button>
+                    <button class="btn" onclick="markVideoWatched(5, 10)">✓ J'ai visionné la vidéo</button>
                     <div class="video-watched" id="video5-watched">✓ Vidéo visionnée</div>
                 </div>
 
@@ -723,7 +723,7 @@
                     <div class="video-placeholder">
                         <iframe src="https://www.youtube.com/embed/ACGEHAYVGkc?si=Nrx6_J9fSSIUY1Hl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <button class="btn" onclick="markVideoWatched(6)">✓ J'ai visionné la vidéo</button>
+                    <button class="btn" onclick="markVideoWatched(6, 11)">✓ J'ai visionné la vidéo</button>
                     <div class="video-watched" id="video6-watched">✓ Vidéo visionnée</div>
                 </div>
 
@@ -1120,16 +1120,22 @@
         }
 
         // Fonction pour marquer une vidéo comme visionnée
-        function markVideoWatched(videoNumber) {
+        function markVideoWatched(videoNumber, sectionNumber) {
             state.videosWatched[videoNumber - 1] = true;
             document.getElementById(`video${videoNumber}-watched`).style.display = 'block';
-            checkSectionCompletion(state.currentSection);
+
+            console.log(`📹 Vidéo ${videoNumber} marquée comme visionnée pour section ${sectionNumber}`);
+            console.log(`✅ state.videosWatched:`, state.videosWatched);
+
+            checkSectionCompletion(sectionNumber);
             updateProgress();
             saveProgress(); // Sauvegarde automatique
         }
 
         // Fonction pour vérifier la complétion d'une section
         function checkSectionCompletion(section) {
+            console.log(`🔍 checkSectionCompletion appelé pour section ${section}`);
+
             // MODE DEBUG : tout est déverrouillé
             if (DEBUG_MODE) {
                 document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = false);
@@ -1143,46 +1149,57 @@
                 case 1:
                     canProceed = state.videosWatched[0];
                     document.getElementById('next1').disabled = !canProceed;
+                    console.log(`Section 1: canProceed=${canProceed}, videosWatched[0]=${state.videosWatched[0]}`);
                     break;
                 case 2:
                     canProceed = state.videosWatched[1];
                     document.getElementById('next2').disabled = !canProceed;
+                    console.log(`Section 2: canProceed=${canProceed}, videosWatched[1]=${state.videosWatched[1]}`);
                     break;
                 case 3:
                     canProceed = state.qcmCorrect[0] && state.qcmCorrect[1] && state.qcmCorrect[2];
                     document.getElementById('next3').disabled = !canProceed;
+                    console.log(`Section 3: canProceed=${canProceed}, QCM=[${state.qcmCorrect[0]},${state.qcmCorrect[1]},${state.qcmCorrect[2]}]`);
                     break;
                 case 4:
                     canProceed = state.cardsFlipped.every(card => card === true);
                     document.getElementById('next4').disabled = !canProceed;
+                    console.log(`Section 4: canProceed=${canProceed}, cardsFlipped=${state.cardsFlipped.filter(c => c).length}/6`);
                     break;
                 case 5:
                     canProceed = state.hendersonComplete;
                     document.getElementById('next5').disabled = !canProceed;
+                    console.log(`Section 5: canProceed=${canProceed}, hendersonComplete=${state.hendersonComplete}`);
                     break;
                 case 6:
                     // Section d'explications - pas de condition, toujours accessible
                     canProceed = true;
+                    console.log(`Section 6: Toujours accessible`);
                     break;
                 case 7:
                     canProceed = state.maslowComplete;
                     document.getElementById('next7').disabled = !canProceed;
+                    console.log(`Section 7: canProceed=${canProceed}, maslowComplete=${state.maslowComplete}`);
                     break;
                 case 8:
                     canProceed = state.videosWatched[2];
                     document.getElementById('next8').disabled = !canProceed;
+                    console.log(`Section 8: canProceed=${canProceed}, videosWatched[2]=${state.videosWatched[2]}`);
                     break;
                 case 9:
                     canProceed = state.videosWatched[3];
                     document.getElementById('next9').disabled = !canProceed;
+                    console.log(`Section 9: canProceed=${canProceed}, videosWatched[3]=${state.videosWatched[3]}`);
                     break;
                 case 10:
                     canProceed = state.videosWatched[4];
                     document.getElementById('next10').disabled = !canProceed;
+                    console.log(`Section 10: canProceed=${canProceed}, videosWatched[4]=${state.videosWatched[4]}`);
                     break;
                 case 11:
                     canProceed = state.videosWatched[5];
                     document.getElementById('next11').disabled = !canProceed;
+                    console.log(`Section 11: canProceed=${canProceed}, videosWatched[5]=${state.videosWatched[5]}`);
                     break;
                 case 12:
                     // QCM Final - 10 questions (indices 3 à 12)
@@ -1191,7 +1208,14 @@
                                  state.qcmCorrect[9] && state.qcmCorrect[10] && state.qcmCorrect[11] &&
                                  state.qcmCorrect[12];
                     document.getElementById('next12').disabled = !canProceed;
+                    console.log(`Section 12: canProceed=${canProceed}, QCM Final completé`);
                     break;
+            }
+
+            if (canProceed) {
+                console.log(`✅ Section ${section}: Bouton next${section} DÉVERROUILLÉ`);
+            } else {
+                console.log(`🔒 Section ${section}: Bouton next${section} reste VERROUILLÉ`);
             }
         }
 
