@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Debug</title>
+    <style>
+        .draggable-item {
+            padding: 10px;
+            background: white;
+            border: 2px solid #e67e22;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .draggable-item.selected {
+            background: #e67e22;
+            color: white;
+        }
+        .drop-zone {
+            padding: 20px;
+            border: 2px dashed #ddd;
+            margin: 10px;
+            min-height: 50px;
+            cursor: pointer;
+        }
+        .drop-zone.active {
+            background: #fff5f0;
+            border-color: #e67e22;
+        }
+        .explanation-box {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Debug - Drag & Drop avec explications</h1>
+
+    <div id="items">
+        <div class="draggable-item" data-explanation="Explication du besoin 1">Besoin 1</div>
+        <div class="draggable-item" data-explanation="Explication du besoin 2">Besoin 2</div>
+    </div>
+
+    <div id="zones">
+        <div class="drop-zone">Zone 1</div>
+        <div class="drop-zone">Zone 2</div>
+    </div>
+
+    <div id="explanations" style="margin-top: 20px;"></div>
+
+    <script>
+        let selectedItem = null;
+
+        // Sélectionner un item
+        document.querySelectorAll('.draggable-item').forEach(item => {
+            item.addEventListener('click', function() {
+                console.log('Item cliqué:', this.textContent);
+
+                // Désélectionner tous
+                document.querySelectorAll('.draggable-item').forEach(el => {
+                    el.classList.remove('selected');
+                });
+
+                // Sélectionner celui-ci
+                this.classList.add('selected');
+                selectedItem = this;
+
+                // Activer les zones
+                document.querySelectorAll('.drop-zone').forEach(zone => {
+                    zone.classList.add('active');
+                });
+            });
+        });
+
+        // Placer dans une zone
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('click', function() {
+                console.log('Zone cliquée');
+
+                if (!selectedItem) {
+                    console.log('Aucun item sélectionné');
+                    return;
+                }
+
+                console.log('Placement de l\'item:', selectedItem.textContent);
+
+                // Placer l'item
+                selectedItem.classList.remove('selected');
+                this.appendChild(selectedItem);
+
+                // Afficher l'explication
+                const explanation = selectedItem.getAttribute('data-explanation');
+                console.log('Explication:', explanation);
+
+                if (explanation) {
+                    const explanationsContainer = document.getElementById('explanations');
+                    const explanationDiv = document.createElement('div');
+                    explanationDiv.className = 'explanation-box';
+                    explanationDiv.innerHTML = `<strong>${selectedItem.textContent}</strong><br>${explanation}`;
+                    explanationsContainer.appendChild(explanationDiv);
+                    console.log('Explication ajoutée!');
+                } else {
+                    console.log('Pas d\'explication trouvée');
+                }
+
+                // Désactiver les zones
+                document.querySelectorAll('.drop-zone').forEach(z => {
+                    z.classList.remove('active');
+                });
+
+                selectedItem = null;
+            });
+        });
+    </script>
+</body>
+</html>
