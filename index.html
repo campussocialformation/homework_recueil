@@ -1123,6 +1123,11 @@
         function markVideoWatched(videoNumber) {
             state.videosWatched[videoNumber - 1] = true;
             document.getElementById(`video${videoNumber}-watched`).style.display = 'block';
+
+            console.log(`📹 Vidéo ${videoNumber} marquée comme visionnée`);
+            console.log(`📍 Section actuelle: ${state.currentSection}`);
+            console.log(`✅ state.videosWatched:`, state.videosWatched);
+
             checkSectionCompletion(state.currentSection);
             updateProgress();
             saveProgress(); // Sauvegarde automatique
@@ -1130,6 +1135,8 @@
 
         // Fonction pour vérifier la complétion d'une section
         function checkSectionCompletion(section) {
+            console.log(`🔍 checkSectionCompletion appelé pour section ${section}`);
+
             // MODE DEBUG : tout est déverrouillé
             if (DEBUG_MODE) {
                 document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = false);
@@ -1143,46 +1150,57 @@
                 case 1:
                     canProceed = state.videosWatched[0];
                     document.getElementById('next1').disabled = !canProceed;
+                    console.log(`Section 1: canProceed=${canProceed}, videosWatched[0]=${state.videosWatched[0]}`);
                     break;
                 case 2:
                     canProceed = state.videosWatched[1];
                     document.getElementById('next2').disabled = !canProceed;
+                    console.log(`Section 2: canProceed=${canProceed}, videosWatched[1]=${state.videosWatched[1]}`);
                     break;
                 case 3:
                     canProceed = state.qcmCorrect[0] && state.qcmCorrect[1] && state.qcmCorrect[2];
                     document.getElementById('next3').disabled = !canProceed;
+                    console.log(`Section 3: canProceed=${canProceed}, QCM=[${state.qcmCorrect[0]},${state.qcmCorrect[1]},${state.qcmCorrect[2]}]`);
                     break;
                 case 4:
                     canProceed = state.cardsFlipped.every(card => card === true);
                     document.getElementById('next4').disabled = !canProceed;
+                    console.log(`Section 4: canProceed=${canProceed}, cardsFlipped=${state.cardsFlipped.filter(c => c).length}/6`);
                     break;
                 case 5:
                     canProceed = state.hendersonComplete;
                     document.getElementById('next5').disabled = !canProceed;
+                    console.log(`Section 5: canProceed=${canProceed}, hendersonComplete=${state.hendersonComplete}`);
                     break;
                 case 6:
                     // Section d'explications - pas de condition, toujours accessible
                     canProceed = true;
+                    console.log(`Section 6: Toujours accessible`);
                     break;
                 case 7:
                     canProceed = state.maslowComplete;
                     document.getElementById('next7').disabled = !canProceed;
+                    console.log(`Section 7: canProceed=${canProceed}, maslowComplete=${state.maslowComplete}`);
                     break;
                 case 8:
                     canProceed = state.videosWatched[2];
                     document.getElementById('next8').disabled = !canProceed;
+                    console.log(`Section 8: canProceed=${canProceed}, videosWatched[2]=${state.videosWatched[2]}`);
                     break;
                 case 9:
                     canProceed = state.videosWatched[3];
                     document.getElementById('next9').disabled = !canProceed;
+                    console.log(`Section 9: canProceed=${canProceed}, videosWatched[3]=${state.videosWatched[3]}`);
                     break;
                 case 10:
                     canProceed = state.videosWatched[4];
                     document.getElementById('next10').disabled = !canProceed;
+                    console.log(`Section 10: canProceed=${canProceed}, videosWatched[4]=${state.videosWatched[4]}`);
                     break;
                 case 11:
                     canProceed = state.videosWatched[5];
                     document.getElementById('next11').disabled = !canProceed;
+                    console.log(`Section 11: canProceed=${canProceed}, videosWatched[5]=${state.videosWatched[5]}`);
                     break;
                 case 12:
                     // QCM Final - 10 questions (indices 3 à 12)
@@ -1191,7 +1209,14 @@
                                  state.qcmCorrect[9] && state.qcmCorrect[10] && state.qcmCorrect[11] &&
                                  state.qcmCorrect[12];
                     document.getElementById('next12').disabled = !canProceed;
+                    console.log(`Section 12: canProceed=${canProceed}, QCM Final completé`);
                     break;
+            }
+
+            if (canProceed) {
+                console.log(`✅ Section ${section}: Bouton next${section} DÉVERROUILLÉ`);
+            } else {
+                console.log(`🔒 Section ${section}: Bouton next${section} reste VERROUILLÉ`);
             }
         }
 
