@@ -36,7 +36,7 @@
                 </ul>
 
                 <div class="video-container">
-                    <button class="btn" onclick="markVideoWatched(1)">✓ J'ai lu l'introduction</button>
+                    <button class="btn" onclick="markVideoWatched(1, 1)">✓ J'ai lu l'introduction</button>
                     <div class="video-watched" id="video1-watched">✓ Compris !</div>
                 </div>
                 <div class="navigation">
@@ -83,7 +83,7 @@
                         Pour aller plus loin à ce sujet, une recommandations de bonne pratique existe à ce sujet:
                     </h3>
                     <a href="https://www.has-sante.fr/upload/docs/application/pdf/2018-03/reco_projet.pdf" target="_blank">
-                        <button class="btn" onclick="markVideoWatched(2)">Voir la recommandation</button>
+                        <button class="btn" onclick="markVideoWatched(2, 2)">Voir la recommandation</button>
                     </a>
                     <div class="video-watched" id="video2-watched">✓ On continue !</div>
                 </div>
@@ -480,7 +480,7 @@
                     <div class="video-placeholder">
                         <iframe src="https://www.youtube.com/embed/NJGBFSQemhI?si=oyk2DRdyH-2_btNg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <button class="btn" onclick="markVideoWatched(3)">✓ J'ai visionné la vidéo</button>
+                    <button class="btn" onclick="markVideoWatched(3, 8)">✓ J'ai visionné la vidéo</button>
                     <div class="video-watched" id="video3-watched">✓ Vidéo visionnée</div>
                 </div>
 
@@ -508,7 +508,7 @@
                     <div class="video-placeholder">
                         <iframe src="https://www.youtube.com/embed/aHbULtv43jE?si=w1hlp3e6GQdqJ2M1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <button class="btn" onclick="markVideoWatched(4)">✓ J'ai visionné la vidéo</button>
+                    <button class="btn" onclick="markVideoWatched(4, 9)">✓ J'ai visionné la vidéo</button>
                     <div class="video-watched" id="video4-watched">✓ Vidéo visionnée</div>
                 </div>
                 
@@ -600,7 +600,7 @@
                     <div class="video-placeholder">
                         <iframe src="https://www.youtube.com/embed/1uehBQjbbFU?si=leydu1ubzeKf4LOe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <button class="btn" onclick="markVideoWatched(5)">✓ J'ai visionné la vidéo</button>
+                    <button class="btn" onclick="markVideoWatched(5, 10)">✓ J'ai visionné la vidéo</button>
                     <div class="video-watched" id="video5-watched">✓ Vidéo visionnée</div>
                 </div>
 
@@ -723,7 +723,7 @@
                     <div class="video-placeholder">
                         <iframe src="https://www.youtube.com/embed/ACGEHAYVGkc?si=Nrx6_J9fSSIUY1Hl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <button class="btn" onclick="markVideoWatched(6)">✓ J'ai visionné la vidéo</button>
+                    <button class="btn" onclick="markVideoWatched(6, 11)">✓ J'ai visionné la vidéo</button>
                     <div class="video-watched" id="video6-watched">✓ Vidéo visionnée</div>
                 </div>
 
@@ -1120,15 +1120,14 @@
         }
 
         // Fonction pour marquer une vidéo comme visionnée
-        function markVideoWatched(videoNumber) {
+        function markVideoWatched(videoNumber, sectionNumber) {
             state.videosWatched[videoNumber - 1] = true;
             document.getElementById(`video${videoNumber}-watched`).style.display = 'block';
 
-            console.log(`📹 Vidéo ${videoNumber} marquée comme visionnée`);
-            console.log(`📍 Section actuelle: ${state.currentSection}`);
+            console.log(`📹 Vidéo ${videoNumber} marquée comme visionnée pour section ${sectionNumber}`);
             console.log(`✅ state.videosWatched:`, state.videosWatched);
 
-            checkSectionCompletion(state.currentSection);
+            checkSectionCompletion(sectionNumber);
             updateProgress();
             saveProgress(); // Sauvegarde automatique
         }
