@@ -953,6 +953,7 @@
                         <ul style="list-style: none; margin: 20px 0;">
                             <li>📅 Date d'obtention : <span id="completionDate"></span></li>
                             <li>⏰ Heure : <span id="completionTime"></span></li>
+                            <li>⏱️ Temps passé : <span id="trainingDuration"></span></li>
                             <li>🔒 Code unique et vérifiable</li>
                         </ul>
 
@@ -1041,8 +1042,75 @@
             cardsFlipped: [false, false, false, false, false, false],
             hendersonComplete: false,
             maslowComplete: false,
-            totalSections: 13
+            totalSections: 13,
+            startTime: null // Timestamp de début de formation
         };
+
+        // ========== SYSTÈME DE SAUVEGARDE AUTOMATIQUE ==========
+
+        // Fonction pour sauvegarder automatiquement la progression en arrière-plan
+        function saveProgress() {
+            try {
+                localStorage.setItem('formationProgress', JSON.stringify(state));
+                console.log('✓ Progression sauvegardée automatiquement');
+            } catch (e) {
+                console.error('Erreur lors de la sauvegarde:', e);
+            }
+        }
+
+        // Fonction pour charger automatiquement la progression au démarrage
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('formationProgress');
+                if (saved) {
+                    const savedState = JSON.parse(saved);
+                    // Copier les données sauvegardées dans l'état actuel
+                    Object.assign(state, savedState);
+                    console.log('✓ Progression chargée:', state);
+
+                    // Restaurer l'affichage de la section en cours
+                    if (state.currentSection > 1) {
+                        goToSection(state.currentSection);
+                    }
+
+                    // Restaurer les indicateurs visuels (vidéos regardées, etc.)
+                    state.videosWatched.forEach((watched, index) => {
+                        if (watched) {
+                            const element = document.getElementById(`video${index + 1}-watched`);
+                            if (element) element.style.display = 'block';
+                        }
+                    });
+
+                    return true;
+                }
+            } catch (e) {
+                console.error('Erreur lors du chargement:', e);
+            }
+
+            // Si pas de progression sauvegardée, enregistrer l'heure de début
+            if (!state.startTime) {
+                state.startTime = Date.now();
+                saveProgress();
+                console.log('✓ Début de formation enregistré');
+            }
+
+            return false;
+        }
+
+        // Fonction pour formater une durée en heures/minutes
+        function formatDuration(milliseconds) {
+            const totalMinutes = Math.floor(milliseconds / 60000);
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+
+            if (hours > 0) {
+                return `${hours}h ${minutes}min`;
+            } else if (minutes > 0) {
+                return `${minutes}min`;
+            } else {
+                return "moins d'1 min";
+            }
+        }
 
         // Indicateur visuel en mode DEBUG
         if (DEBUG_MODE) {
@@ -1057,6 +1125,7 @@
             document.getElementById(`video${videoNumber}-watched`).style.display = 'block';
             checkSectionCompletion(state.currentSection);
             updateProgress();
+            saveProgress(); // Sauvegarde automatique
         }
 
         // Fonction pour vérifier la complétion d'une section
@@ -1171,6 +1240,7 @@
             state.qcmAnswered[questionIndex] = true;
             checkSectionCompletion(state.currentSection);
             updateProgress();
+            saveProgress(); // Sauvegarde automatique
         }
 
         // Fonction pour retourner une carte
@@ -1178,13 +1248,14 @@
             if (!card.classList.contains('flipped')) {
                 card.classList.add('flipped');
                 state.cardsFlipped[cardNumber - 1] = true;
-                
+
                 // Vérifier si toutes les cartes sont retournées
                 if (state.cardsFlipped.every(c => c === true)) {
                     document.getElementById('flipCompleteMessage').classList.add('show');
                     checkSectionCompletion(4);
                 }
                 updateProgress();
+                saveProgress(); // Sauvegarde automatique
             }
         }
 
@@ -1350,6 +1421,7 @@
                 state.hendersonComplete = true;
                 checkSectionCompletion(5);
                 updateProgress();
+                saveProgress(); // Sauvegarde automatique
             } else {
                 feedback.textContent = '✗ Certains besoins ne sont pas au bon endroit. Réessayez !';
                 feedback.className = 'drag-feedback show error';
@@ -1402,6 +1474,7 @@
                 state.maslowComplete = true;
                 checkSectionCompletion(7);
                 updateProgress();
+                saveProgress(); // Sauvegarde automatique
             } else {
                 feedback.textContent = '✗ Certains besoins ne sont pas au bon niveau. Réessayez !';
                 feedback.className = 'drag-feedback show error';
@@ -1433,6 +1506,7 @@
             // Afficher la section demandée
             document.getElementById(`section${sectionNumber}`).classList.add('active');
             state.currentSection = sectionNumber;
+            saveProgress(); // Sauvegarde automatique de la section en cours
 
             // Initialiser le drag & drop si nécessaire
             if (sectionNumber === 5) {
@@ -1492,10 +1566,10 @@
             const now = new Date();
             const dateStr = now.toLocaleDateString('fr-FR');
             const timeStr = now.toLocaleTimeString('fr-FR');
-            
+
             // Générer un identifiant unique
             const randomId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            
+
             // Créer un hash simple basé sur la date, l'heure et l'ID
             const dataToHash = dateStr + timeStr + randomId;
             let hash = 0;
@@ -1505,14 +1579,23 @@
                 hash = hash & hash;
             }
             const hashStr = Math.abs(hash).toString(36).toUpperCase().substring(0, 8);
-            
+
             // Format du code: MS-XXXXXXXX-HASH
             const badgeCode = `MS-${randomId.substring(0, 8).toUpperCase()}-${hashStr}`;
-            
+
+            // Calculer le temps passé sur la formation
+            let durationText = "N/A";
+            if (state.startTime) {
+                const endTime = Date.now();
+                const duration = endTime - state.startTime;
+                durationText = formatDuration(duration);
+            }
+
             // Afficher les informations
             document.getElementById('badgeCode').textContent = badgeCode;
             document.getElementById('completionDate').textContent = dateStr;
             document.getElementById('completionTime').textContent = timeStr;
+            document.getElementById('trainingDuration').textContent = durationText;
         }
 
         // Fonction pour télécharger l'attestation
@@ -1552,9 +1635,14 @@ Code vérifiable auprès du formateur
             window.URL.revokeObjectURL(url);
         }
 
-        // Initialisation
-        updateProgress();
-        checkSectionCompletion(1);
+        // Initialisation au chargement de la page
+        window.addEventListener('DOMContentLoaded', function() {
+            // Charger automatiquement la progression sauvegardée
+            loadProgress();
+            // Mettre à jour l'affichage
+            updateProgress();
+            checkSectionCompletion(state.currentSection);
+        });
     </script>
 </body>
 </html>
